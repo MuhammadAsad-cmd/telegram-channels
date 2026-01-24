@@ -10,9 +10,16 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "country-list": "^2.4.1",
+    "i18n-iso-countries": "^7.14.0",
+    "lucide-react": "^0.563.0",
     "next": "16.1.4",
+    "nextjs-toploader": "^3.9.17",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-icons": "^5.5.0",
+    "react-select": "^5.10.2",
+    "react-world-flags": "^1.6.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
