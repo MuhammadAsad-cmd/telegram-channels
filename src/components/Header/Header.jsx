@@ -42,14 +42,14 @@ export default function Header() {
                 </Link>
 
                 <Link
-                  href="#"
+                  href="/trending"
                   className="text-text-muted hover:text-text-primary px-3 py-2 text-sm transition-colors duration-200"
                 >
                   Trending
                 </Link>
 
                 <Link
-                  href="#"
+                  href="/ranking"
                   className="text-text-muted hover:text-text-primary px-3 py-2 text-sm transition-colors duration-200"
                 >
                   Ranking
@@ -58,6 +58,12 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2">
+              <Link
+                href="/cp"
+                className="hidden sm:flex text-text-muted hover:text-text-primary px-3 py-2 text-sm transition-colors duration-200"
+              >
+                Dashboard
+              </Link>
               <button
                 type="button"
                 onClick={() => setIsAddLinkModalOpen(true)}
@@ -73,7 +79,6 @@ export default function Header() {
               >
                 Login
               </Link>
-
               <Link
                 href="/register"
                 className="bg-accent-primary hover:bg-accent-primary/90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"

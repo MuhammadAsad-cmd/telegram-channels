@@ -3,7 +3,9 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 
-export default function Modal({ isOpen, onClose, children, title }) {
+export default function Modal({ isOpen, onClose, children, title, variant = "light", size = "default" }) {
+  const isDark = variant === "dark";
+  const maxWidthClass = size === "sm" ? "max-w-sm" : "max-w-2xl";
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -47,15 +49,19 @@ export default function Modal({ isOpen, onClose, children, title }) {
       {/* Modal Content */}
       <div
         ref={modalRef}
-        className={`relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
-          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
-        }`}
+        className={`relative rounded-xl shadow-2xl w-full ${maxWidthClass} max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
+          isDark
+            ? "bg-secondary-dark border border-white/6"
+            : "bg-white"
+        } ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
       >
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer z-10"
+          className={`absolute top-4 right-4 transition-colors cursor-pointer z-10 ${
+            isDark ? "text-text-muted hover:text-text-primary" : "text-gray-400 hover:text-gray-600"
+          }`}
         >
           <X className="w-5 h-5" />
         </button>

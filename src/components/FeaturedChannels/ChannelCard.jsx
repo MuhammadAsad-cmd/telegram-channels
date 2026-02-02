@@ -27,6 +27,7 @@ export default function ChannelCard({ channel }) {
             alt={channel.name}
             fill
             className="object-cover"
+            unoptimized
           />
         </div>
 

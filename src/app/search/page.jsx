@@ -89,6 +89,7 @@ export default function SearchPage() {
                     alt={channel.name}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
 

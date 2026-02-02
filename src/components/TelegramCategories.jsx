@@ -93,6 +93,7 @@ export default function TelegramCategories() {
                                 src={category.image}
                                 alt={category.title}
                                 className="object-contain"
+                                unoptimized
                             />
                         </div>
                         <div className="flex items-center justify-center flex-col gap-1 relative z-10">
