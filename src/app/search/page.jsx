@@ -22,11 +22,11 @@ const TYPE_OPTIONS = [
   { value: "channel", label: "Channels" },
   { value: "group", label: "Groups" },
   { value: "bot", label: "Bots" },
-  { value: "sticker", label: "Stickers" },
 ];
 
 const SORT_OPTIONS = [
   { value: "memberCount", label: "Members" },
+  { value: "currentRank", label: "Ranking" },
   { value: "createdAt", label: "Newest" },
   { value: "rating", label: "Rating" },
 ];
@@ -168,7 +168,7 @@ function SearchContent() {
                   />
                 </div>
                 <div className="flex items-center gap-2 min-w-[140px]">
-                  <span className="text-sm text-gray-500">Sort by</span>
+                  <span className="text-sm text-gray-500 whitespace-nowrap">Sort by</span>
                   <SelectDropdown
                     options={SORT_OPTIONS}
                     value={sortKey}

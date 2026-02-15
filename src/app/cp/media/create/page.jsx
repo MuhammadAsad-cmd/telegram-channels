@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, Loader2, Users } from "lucide-react";
+import { AlertTriangle, Loader2, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import CpCard from "@/components/Cp/CpCard";
 import SelectDropdown from "@/components/UI/SelectDropdown";
@@ -21,7 +21,8 @@ export default function CpMediaCreatePage() {
   const [mediaName, setMediaName] = useState("");
   const [nsfw, setNsfw] = useState(false);
   const [shortDescription, setShortDescription] = useState("");
-  const [tags, setTags] = useState("");
+  const [tagInput, setTagInput] = useState("");
+  const [tagList, setTagList] = useState([]);
   const [longDescription, setLongDescription] = useState("");
   const [language, setLanguage] = useState("en");
   const [country, setCountry] = useState("PK");
@@ -85,10 +86,7 @@ export default function CpMediaCreatePage() {
     }
     setIsSubmitting(true);
     try {
-      const hashtags = tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+      const hashtags = tagList.length > 0 ? tagList : ["general"];
 
       const payload = {
         telegramId: channelInfo.telegramId,
@@ -247,7 +245,7 @@ export default function CpMediaCreatePage() {
                   <p className="text-xs text-gray-500 mt-1">Keep it less than 45 characters.</p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="nsfw"
@@ -258,7 +256,7 @@ export default function CpMediaCreatePage() {
                   <label htmlFor="nsfw" className="text-sm text-gray-700 cursor-pointer">
                     NSFW (This media is not safe for work/family and may include adults content.)
                   </label>
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
@@ -278,13 +276,43 @@ export default function CpMediaCreatePage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
                   <input
                     type="text"
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const value = tagInput.trim().toLowerCase();
+                        if (value && !tagList.includes(value)) {
+                          setTagList((prev) => [...prev, value]);
+                          setTagInput("");
+                        }
+                      }
+                    }}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary"
-                    placeholder="code, ai, tech, programming, web"
+                    placeholder="Type a tag and press Enter to add"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Enter the five most related and most searched keywords! Comma (,) separated!
+                  {tagList.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {tagList.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-accent-primary/10 text-accent-primary rounded-full text-sm font-medium"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => setTagList((prev) => prev.filter((t) => t !== tag))}
+                            className="p-0.5 cursor-pointer hover:bg-accent-primary/20 rounded-full transition-colors"
+                            aria-label={`Remove ${tag}`}
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 mt-2">
+                    Type and press Enter to add. Use the five most related keywords.
                   </p>
                 </div>
 
@@ -305,7 +333,7 @@ export default function CpMediaCreatePage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
                     <SelectDropdown
                       options={languageOptionsWithFlag}
@@ -327,7 +355,7 @@ export default function CpMediaCreatePage() {
                       searchable
                       searchPlaceholder="Search country..."
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
                     <SelectDropdown
@@ -341,7 +369,7 @@ export default function CpMediaCreatePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                {/* <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <div>
                     <p className="font-medium text-gray-800">Feature This Media</p>
                     <p className="text-sm text-gray-600 mt-0.5">Featured this media for a month $20</p>
@@ -368,7 +396,7 @@ export default function CpMediaCreatePage() {
                       }`}
                     />
                   </button>
-                </div>
+                </div> */}
 
                 <div className="flex justify-end pt-4">
                   <button

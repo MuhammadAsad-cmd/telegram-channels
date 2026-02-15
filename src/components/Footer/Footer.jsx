@@ -23,7 +23,7 @@ const footerData = {
   links: {
     title: "Links",
     links: [
-      { name: "Telegram", href: "https://telegram.org", icon: <FaTelegram className="w-3 h-3 text-accent-primary" /> },
+      // { name: "Telegram", href: "https://telegram.org", icon: <FaTelegram className="w-3 h-3 text-accent-primary" /> },
       { name: "Telegraph", href: "https://telegra.ph" },
       { name: "Download Telegram", href: "https://telegram.org/apps" },
       { name: "Daily Channels", href: "#" },

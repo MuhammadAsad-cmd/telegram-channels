@@ -20,7 +20,7 @@ export default function SearchInput({ onSearch, initialQuery = "" }) {
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="flex items-center bg-white rounded-2xl shadow-lg shadow-black/5 border border-gray-200/80 overflow-hidden">
-        <div className="flex items-center gap-3 flex-1 pl-5 pr-2 py-1">
+        <div className="flex items-center gap-3 flex-1 pl-5 pr-2">
           <Search className="w-5 h-5 text-gray-400 shrink-0" />
           <input
             type="text"
@@ -32,7 +32,8 @@ export default function SearchInput({ onSearch, initialQuery = "" }) {
         </div>
         <button
           type="submit"
-          className="bg-accent-primary hover:bg-accent-primary/90 text-white px-8 py-3.5 transition-colors duration-200 shrink-0"
+          onClick={handleSubmit}
+          className="bg-accent-primary hover:bg-accent-primary/90 cursor-pointer text-white px-8 py-3.5 transition-colors duration-200 shrink-0"
         >
           <Search className="w-5 h-5" />
         </button>

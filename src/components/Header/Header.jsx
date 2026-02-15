@@ -48,7 +48,7 @@ export default function Header() {
                 </Dropdown> */}
 
                 <MotionLink
-                  href="#"
+                  href="/search?sortKey=createdAt"
                   whileHover={{ opacity: 0.9 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15 }}
@@ -58,7 +58,7 @@ export default function Header() {
                 </MotionLink>
 
                 <MotionLink
-                  href="/trending"
+                  href="/search?sortKey=rating"
                   whileHover={{ opacity: 0.9 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15 }}
@@ -68,7 +68,7 @@ export default function Header() {
                 </MotionLink>
 
                 <MotionLink
-                  href="/ranking"
+                  href="/search?sortKey=currentRank"
                   whileHover={{ opacity: 0.9 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15 }}
@@ -80,7 +80,7 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2">
-              <motion.button
+              {/* <motion.button
                 type="button"
                 onClick={() => setIsAddLinkModalOpen(true)}
                 whileHover={{ opacity: 0.9 }}
@@ -90,7 +90,7 @@ export default function Header() {
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Link</span>
-              </motion.button>
+              </motion.button> */}
               <MotionLink
                 href="/search"
                 whileHover={{ opacity: 0.9 }}

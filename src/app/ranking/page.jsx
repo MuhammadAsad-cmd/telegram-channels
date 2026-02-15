@@ -236,7 +236,7 @@ export default function RankingPage() {
             ))}
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <span className="text-text-muted text-sm">Sort by</span>
+            <span className="text-text-muted text-sm whitespace-nowrap">Sort by</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
