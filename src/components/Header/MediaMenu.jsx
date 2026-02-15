@@ -3,10 +3,10 @@
 import { Megaphone, Users, Bot, Sticker } from "lucide-react";
 
 const mediaItems = [
-  { name: "Channels", icon: Megaphone },
-  { name: "Groups", icon: Users },
-  { name: "Bots", icon: Bot },
-  { name: "Stickers", icon: Sticker },
+  { name: "Channels", icon: Megaphone, type: "channel" },
+  { name: "Groups", icon: Users, type: "group" },
+  { name: "Bots", icon: Bot, type: "bot" },
+  { name: "Stickers", icon: Sticker, type: "sticker" },
 ];
 
 export default function MediaMenu() {
@@ -17,7 +17,7 @@ export default function MediaMenu() {
         return (
           <a
             key={item.name}
-            href="#"
+            href={`/search?type=${item.type}`}
             className="flex items-center gap-3 px-4 py-2.5 text-text-muted hover:text-text-primary hover:bg-white/3 transition-colors duration-200"
           >
             <Icon className="w-4 h-4" />

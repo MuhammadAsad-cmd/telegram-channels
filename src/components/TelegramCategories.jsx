@@ -1,120 +1,121 @@
-import Image from 'next/image';
-import React from 'react';
-import { FaSmile, FaMicrochip, FaCamera, FaChevronRight } from 'react-icons/fa';
+"use client";
+
+import Link from "next/link";
+import { motion } from "motion/react";
+import { Megaphone, Users, Bot, Sticker, ChevronRight } from "lucide-react";
+import { useCategories } from "@/hooks/useCategories";
+
+const MotionLink = motion.create(Link);
+
+const typeItems = [
+  { title: "Channels", type: "channel", icon: Megaphone },
+  { title: "Groups", type: "group", icon: Users },
+  { title: "Bots", type: "bot", icon: Bot },
+  { title: "Stickers", type: "sticker", icon: Sticker },
+];
 
 export default function TelegramCategories() {
-    const topCategories = [
-        {
-            icon: <FaSmile className="w-6 h-6 text-accent-primary" />,
-            title: 'Entertainment',
-            count: '341 Media'
-        },
-        {
-            icon: <FaMicrochip className="w-6 h-6 text-accent-primary" />,
-            title: 'Technology',
-            count: '470 Media'
-        },
-        {
-            icon: <FaCamera className="w-6 h-6 text-accent-primary" />,
-            title: 'Photo',
-            count: '146 Media'
-        }
-    ];
+  const { categories } = useCategories();
+  const displayCategories = categories?.slice(0, 3) ?? [];
 
-    const bottomCategories = [
-        {
-            image: 'https://telegramchannels.me/images/satellite.svg',
-            title: 'Channels',
-            count: '7,331',
-            subCount: '1.15Bn'
-        },
-        {
-            image: 'https://telegramchannels.me/images/networking.svg',
-            title: 'Groups',
-            count: '1,383',
-            subCount: '5.99M'
-        },
-        {
-            image: 'https://telegramchannels.me/images/robot.svg',
-            title: 'Bots',
-            count: '1,533',
-            subCount: ''
-        },
-        {
-            image: 'https://telegramchannels.me/images/moon.svg',
-            title: 'Stickers',
-            count: '1,306',
-            subCount: ''
-        }
-    ];
-
-    return (
-        <div className="w-full max-w-[1344px] mx-auto px-4 md:px-8 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                {topCategories.map((category, index) => (
-                    <div
-                        key={index}
-                        className="bg-secondary-dark border border-white/6 rounded-lg p-5 transition-all duration-300 hover:border-white/12 cursor-pointer group"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="bg-primary-dark rounded-lg p-3 group-hover:bg-accent-primary/10 transition-colors duration-300">
-                                {category.icon}
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-lg font-medium text-text-primary mb-0.5">
-                                    {category.title}
-                                </h3>
-                                <p className="text-text-muted text-sm">{category.count}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-
-                {/* Categories Button */}
-                <div className="bg-secondary-dark border border-white/6 rounded-lg p-5 transition-all duration-300 hover:border-accent-primary/50 cursor-pointer flex items-center justify-center group">
-                    <div className="text-center flex items-center gap-3">
-                        <h3 className="text-lg font-medium text-text-primary">All Categories</h3>
-                        <FaChevronRight className="w-4 h-4 text-text-muted group-hover:text-accent-primary group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
-                </div>
+  return (
+    <motion.div
+      className="w-full max-w-[1344px] mx-auto px-4 md:px-8 py-12"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.05 } },
+        }}
+      >
+        {displayCategories.map((cat) => (
+          <MotionLink
+            key={cat._id}
+            href={`/search?category=${cat._id}`}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            variants={{
+              hidden: { opacity: 0, y: 16 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            }}
+            className="bg-secondary-dark border border-white/6 rounded-lg p-5 hover:border-white/12 cursor-pointer group block"
+          >
+            <div className="flex items-center gap-4">
+              <div
+                className="bg-primary-dark rounded-lg p-3 group-hover:bg-accent-primary/10 transition-colors duration-300 w-12 h-12 flex items-center justify-center [&>svg]:w-6 [&>svg]:h-6 [&>svg]:text-accent-primary"
+                dangerouslySetInnerHTML={{ __html: cat.logo ?? "" }}
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-text-primary mb-0.5">{cat.title}</h3>
+                <p className="text-text-muted text-sm">
+                  {cat.channelCount ?? 0} {cat.channelCount === 1 ? "Channel" : "Channels"}
+                </p>
+              </div>
             </div>
+          </MotionLink>
+        ))}
 
-            {/* Bottom Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {bottomCategories.map((category, index) => (
-                    <div
-                        key={index}
-                        className="relative bg-secondary-dark border border-white/6 rounded-lg p-5 overflow-hidden transition-all duration-300 hover:border-white/12 cursor-pointer"
-                    >
-                        <div className="absolute -top-4 -left-8 opacity-20">
-                            <Image
-                                width={80}
-                                height={80}
-                                src={category.image}
-                                alt={category.title}
-                                className="object-contain"
-                                unoptimized
-                            />
-                        </div>
-                        <div className="flex items-center justify-center flex-col gap-1 relative z-10">
-                            <h3 className="text-lg font-medium text-text-primary">
-                                {category.title}
-                            </h3>
-                            <div className="flex items-center gap-2">
-                                <p className="text-accent-primary font-semibold text-xl">
-                                    {category.count}
-                                </p>
-                                {category.subCount && (
-                                    <>
-                                        <span className="text-text-muted/40">/</span>
-                                        <p className="text-text-muted text-sm">{category.subCount}</p>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+        <MotionLink
+          href="/search"
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.2 }}
+          variants={{
+            hidden: { opacity: 0, y: 16 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+          }}
+          className="bg-secondary-dark border border-white/6 rounded-lg p-5 hover:border-accent-primary/50 cursor-pointer flex items-center justify-center group"
+        >
+          <div className="text-center flex items-center gap-3">
+            <h3 className="text-lg font-medium text-text-primary">All Categories</h3>
+            <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-accent-primary group-hover:translate-x-1 transition-all duration-300" />
+          </div>
+        </MotionLink>
+      </motion.div>
+
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.05 } },
+        }}
+      >
+        {typeItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <MotionLink
+              key={item.type}
+              href={`/search?type=${item.type}`}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+              }}
+              className="relative bg-secondary-dark border border-white/6 rounded-lg p-5 overflow-hidden hover:border-white/12 cursor-pointer flex items-center justify-center flex-col gap-1 group"
+            >
+              <div className="absolute -top-4 -left-8 opacity-20">
+                <Icon className="w-20 h-20 text-accent-primary" />
+              </div>
+              <h3 className="text-lg font-medium text-text-primary relative z-10">{item.title}</h3>
+              <p className="text-accent-primary font-semibold text-xl relative z-10">Browse</p>
+            </MotionLink>
+          );
+        })}
+      </motion.div>
+    </motion.div>
+  );
 }

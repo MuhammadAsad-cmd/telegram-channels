@@ -1,11 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 
 export default function LogoutModal({ isOpen, onClose, onConfirm }) {
-  const handleLogout = () => {
-    onConfirm?.();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await onConfirm?.();
     onClose();
+    router.push("/login");
   };
 
   return (

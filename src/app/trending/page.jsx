@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { Flame, ArrowRight, ExternalLink } from "lucide-react";
 import { trendingChannels } from "@/data/trendingData";
 import Image from "next/image";
+
+const MotionLink = motion.create(Link);
 
 export default function TrendingPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +48,12 @@ export default function TrendingPage() {
       </div>
 
       {/* Hero */}
-      <div className="max-w-[1344px] mx-auto px-4 md:px-8 py-12">
+      <motion.div
+        className="max-w-[1344px] mx-auto px-4 md:px-8 py-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-2xl bg-accent-red/10 flex items-center justify-center mb-6">
             <Flame className="w-10 h-10 text-accent-red" />
@@ -61,15 +69,37 @@ export default function TrendingPage() {
             Last Update: {new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}, at 12 AM
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Channel Cards Grid */}
-      <div className="max-w-[1344px] mx-auto px-4 md:px-8 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedChannels.map((channel, idx) => (
-            <div
+      <motion.div
+        className="max-w-[1344px] mx-auto px-4 md:px-8 pb-12"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
+          {paginatedChannels.map((channel) => (
+            <motion.div
               key={channel.rank}
-              className="group relative bg-secondary-dark border border-white/6 rounded-xl p-5 hover:border-accent-primary/30 transition-all duration-200"
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="group relative bg-secondary-dark border border-white/6 rounded-xl p-5 hover:border-accent-primary/30"
             >
               <span className="absolute top-4 right-4 text-text-muted/50 group-hover:text-accent-primary transition-colors">
                 <ExternalLink className="w-4 h-4" />
@@ -103,45 +133,59 @@ export default function TrendingPage() {
                 </div>
               </div>
               <p className="text-text-muted text-sm mt-4 line-clamp-2">{channel.description}</p>
-              <Link
+              <MotionLink
                 href="#"
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.15 }}
                 className="mt-4 inline-flex items-center gap-2 text-accent-primary hover:text-accent-primary/80 text-sm font-medium transition-colors"
               >
                 Join Channel
                 <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+              </MotionLink>
+            </motion.div>
           ))}
 
           {/* Ad Card */}
-          <div className="relative bg-secondary-dark border border-dashed border-white/20 rounded-xl p-6 flex flex-col items-center justify-center min-h-[200px]">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="relative bg-secondary-dark border border-dashed border-white/20 rounded-xl p-6 flex flex-col items-center justify-center min-h-[200px]"
+          >
             <span className="absolute top-3 right-3 text-xs text-text-muted bg-primary-dark px-2 py-0.5 rounded">Ad</span>
             <p className="text-text-muted text-sm mb-2">Your Channel Here</p>
-            <Link
+            <MotionLink
               href="/cp/ads"
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.15 }}
               className="px-4 py-2 bg-accent-primary hover:bg-accent-primary/90 text-white text-sm font-medium rounded-lg transition-colors"
             >
               Promote Now
-            </Link>
-          </div>
-        </div>
+            </MotionLink>
+          </motion.div>
+        </motion.div>
 
         {/* Pagination */}
         <div className="flex justify-center items-center gap-2 mt-12">
-          <button
+          <motion.button
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.15 }}
             className="px-4 py-2 rounded-lg bg-secondary-dark border border-white/6 text-text-primary hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Prev
-          </button>
+          </motion.button>
           <div className="flex gap-1">
             {Array.from({ length: totalPages }, (_, i) => (
-              <button
+              <motion.button
                 key={i}
                 type="button"
                 onClick={() => setCurrentPage(i + 1)}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.15 }}
                 className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
                   currentPage === i + 1
                     ? "bg-accent-primary text-white"
@@ -149,19 +193,21 @@ export default function TrendingPage() {
                 }`}
               >
                 {i + 1}
-              </button>
+              </motion.button>
             ))}
           </div>
-          <button
+          <motion.button
             type="button"
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.15 }}
             className="px-4 py-2 rounded-lg bg-secondary-dark border border-white/6 text-text-primary hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Next
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

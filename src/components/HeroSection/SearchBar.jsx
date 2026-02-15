@@ -1,13 +1,23 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import { Search, ChevronDown, Sparkles } from "lucide-react";
 import { CiFilter } from "react-icons/ci";
 
-const filterOptions = ["All", "Channels", "Groups", "Bots", "Stickers"];
+const filterOptions = [
+  { label: "All", value: "" },
+  { label: "Channels", value: "channel" },
+  { label: "Groups", value: "group" },
+  { label: "Bots", value: "bot" },
+  { label: "Stickers", value: "sticker" },
+];
 
 export default function SearchBar() {
-  const [filter, setFilter] = useState("All");
+  const router = useRouter();
+  const [filter, setFilter] = useState(filterOptions[0]);
+  const [query, setQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
 
@@ -22,29 +32,45 @@ export default function SearchBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleSearch = (e) => {
+    e?.preventDefault?.();
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("search", query.trim());
+    if (filter.value) params.set("type", filter.value);
+    router.push(`/search?${params.toString()}`);
+  };
+
+  const handleLucky = () => {
+    router.push("/search?sortKey=memberCount&sortBy=desc");
+  };
+
   return (
-    <div className="bg-white rounded-2xl md:rounded-full shadow-2xl shadow-black/20 p-2 flex md:flex-row flex-col items-center gap-y-2 w-full">
+    <form onSubmit={handleSearch} className="bg-white rounded-2xl md:rounded-full shadow-2xl shadow-black/20 p-2 flex md:flex-row flex-col items-center gap-y-2 w-full">
       <div className="flex items-center gap-3 flex-1 pl-4 max-md:py-2 max-md:border max-md:border-gray-200 max-md:rounded-lg w-full">
         <Search className="w-5 h-5 text-gray-400" />
         <input
           type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search channels, groups, bots..."
           className="flex-1 outline-none text-gray-800 placeholder-gray-400 bg-transparent text-base"
         />
       </div>
 
       <div className="relative" ref={filterRef}>
-        <button
+        <motion.button
           type="button"
           onClick={() => setIsFilterOpen(!isFilterOpen)}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.15 }}
           className="flex items-center gap-2 cursor-pointer px-4 py-2 border-l border-gray-200 text-gray-600 hover:text-gray-800 transition-colors duration-200"
         >
           <CiFilter className="w-4 h-4" />
-          <span className="text-sm font-medium">{filter}</span>
+          <span className="text-sm font-medium">{filter.label}</span>
           <ChevronDown
             className={`w-4 h-4 text-accent-primary transition-transform duration-200 ${isFilterOpen ? "rotate-180" : ""}`}
           />
-        </button>
+        </motion.button>
 
         <div
           className={`
@@ -55,7 +81,7 @@ export default function SearchBar() {
         >
           {filterOptions.map((option) => (
             <button
-              key={option}
+              key={option.value || "all"}
               type="button"
               onClick={() => {
                 setFilter(option);
@@ -63,29 +89,34 @@ export default function SearchBar() {
               }}
               className={`
                 w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-200
-                ${filter === option ? "text-accent-primary font-medium" : "text-gray-700"}
+                ${filter.value === option.value ? "text-accent-primary font-medium" : "text-gray-700"}
               `}
             >
-              {option}
+              {option.label}
             </button>
           ))}
         </div>
       </div>
 
-      <button
-        type="button"
+      <motion.button
+        type="submit"
+        whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.15 }}
         className="max-md:w-full cursor-pointer bg-accent-primary hover:bg-accent-primary/90 text-white font-medium px-8 py-3 rounded-full transition-colors duration-200 text-sm"
       >
         Search
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
         type="button"
+        onClick={handleLucky}
+        whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.15 }}
         className="max-md:w-full cursor-pointer flex items-center justify-center gap-2 bg-accent-secondary hover:bg-accent-secondary/90 text-white font-medium px-5 py-3 rounded-full transition-all duration-200 ml-1 text-sm whitespace-nowrap"
       >
         <Sparkles className="w-4 h-4" />
         <span>Lucky</span>
-      </button>
-    </div>
+      </motion.button>
+    </form>
   );
 }

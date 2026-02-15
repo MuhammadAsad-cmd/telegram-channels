@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, Check, Search } from "lucide-react";
 
 export default function SelectDropdown({
@@ -11,7 +12,7 @@ export default function SelectDropdown({
   searchable = false,
   searchPlaceholder = "Search...",
   width = "full",
-  maxHeight = "250px",
+  maxHeight = "280px",
   renderOption,
   renderValue,
   className = "",
@@ -19,13 +20,36 @@ export default function SelectDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  // Update dropdown position when opened (fixed = viewport-relative)
+  useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const dropdownHeight = 350;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const openUpward = spaceBelow < dropdownHeight && rect.top > spaceBelow;
+
+      setPosition({
+        top: openUpward ? rect.top - dropdownHeight - 4 : rect.bottom + 4,
+        left: rect.left,
+        width: Math.max(rect.width, 200),
+      });
+    }
+  }, [isOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
         setIsOpen(false);
         setSearchQuery("");
       }
@@ -38,7 +62,7 @@ export default function SelectDropdown({
   // Focus search input when dropdown opens
   useEffect(() => {
     if (isOpen && searchable && searchInputRef.current) {
-      searchInputRef.current.focus();
+      setTimeout(() => searchInputRef.current?.focus(), 10);
     }
   }, [isOpen, searchable]);
 
@@ -53,12 +77,83 @@ export default function SelectDropdown({
   const selectedOption = options.find((opt) => opt.value === value);
 
   // Width classes
-  const widthClass = width === "full" ? "w-full" : `w-[${width}]`;
+  const widthClass = width === "full" ? "w-full" : "w-full";
+  const minWidthClass = "min-w-[200px]";
+
+  const dropdownContent = isOpen && (
+    <div
+      ref={dropdownRef}
+      className="fixed z-[9999] bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden"
+      style={{
+        top: position.top,
+        left: position.left,
+        width: position.width,
+        maxHeight: 400,
+      }}
+    >
+      {/* Search Input */}
+      {searchable && (
+        <div className="p-2 border-b border-gray-100 shrink-0">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={searchPlaceholder}
+              className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/20"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Options List */}
+      <div
+        className="overflow-y-auto overscroll-contain"
+        style={{ maxHeight: maxHeight }}
+      >
+        {filteredOptions.length === 0 ? (
+          <div className="px-4 py-4 text-sm text-gray-500 text-center">
+            No options found
+          </div>
+        ) : (
+          filteredOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+                setSearchQuery("");
+              }}
+              className={`
+                w-full flex items-center justify-between gap-2 px-4 py-2.5
+                text-left text-sm transition-colors duration-150 cursor-pointer
+                ${
+                  option.value === value
+                    ? "bg-accent-primary/10 text-accent-primary font-medium"
+                    : "text-gray-700 hover:bg-gray-50"
+                }
+              `}
+            >
+              <span className="flex items-center gap-2 truncate">
+                {renderOption ? renderOption(option) : option.label}
+              </span>
+              {option.value === value && (
+                <Check className="w-4 h-4 shrink-0" />
+              )}
+            </button>
+          ))
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div
-      ref={dropdownRef}
-      className={`relative ${widthClass} ${className}`}
+      ref={triggerRef}
+      className={`relative ${widthClass} ${minWidthClass} ${className}`}
     >
       {/* Trigger Button */}
       <button
@@ -71,7 +166,7 @@ export default function SelectDropdown({
           text-left text-gray-700 
           transition-all duration-200
           ${disabled ? "opacity-50 cursor-not-allowed bg-gray-50" : "hover:border-gray-400 cursor-pointer"}
-          ${isOpen ? "border-accent-primary ring-1 ring-accent-primary" : ""}
+          ${isOpen ? "border-accent-primary ring-2 ring-accent-primary/20" : ""}
         `}
       >
         <span className="flex items-center gap-2 truncate">
@@ -92,74 +187,9 @@ export default function SelectDropdown({
         />
       </button>
 
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div
-          className={`
-            absolute top-full left-0 right-0 mt-1 z-50
-            bg-white border border-gray-200 rounded-lg shadow-xl
-            overflow-hidden
-            animate-in fade-in-0 zoom-in-95 duration-150
-          `}
-        >
-          {/* Search Input */}
-          {searchable && (
-            <div className="p-2 border-b border-gray-100">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={searchPlaceholder}
-                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-accent-primary"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Options List */}
-          <div
-            className="overflow-y-auto"
-            style={{ maxHeight }}
-          >
-            {filteredOptions.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-500 text-center">
-                No options found
-              </div>
-            ) : (
-              filteredOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(option.value);
-                    setIsOpen(false);
-                    setSearchQuery("");
-                  }}
-                  className={`
-                    w-full flex items-center justify-between gap-2 px-4 py-2.5
-                    text-left text-sm transition-colors duration-150 cursor-pointer
-                    ${
-                      option.value === value
-                        ? "bg-accent-primary/10 text-accent-primary"
-                        : "text-gray-700 hover:bg-gray-50"
-                    }
-                  `}
-                >
-                  <span className="flex items-center gap-2 truncate">
-                    {renderOption ? renderOption(option) : option.label}
-                  </span>
-                  {option.value === value && (
-                    <Check className="w-4 h-4 shrink-0" />
-                  )}
-                </button>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      {/* Dropdown Menu - Rendered via Portal to prevent overflow clipping */}
+      {typeof document !== "undefined" &&
+        createPortal(dropdownContent, document.body)}
     </div>
   );
 }

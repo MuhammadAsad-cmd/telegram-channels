@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import GoogleButton from "@/components/Auth/GoogleButton";
 import FormInput from "@/components/Auth/FormInput";
 import AuthCard from "@/components/Auth/AuthCard";
 import Divider from "@/components/Auth/Divider";
+import { useLogin } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ export default function LoginPage() {
     password: "",
     rememberMe: false,
   });
+
+  const { handleLogin, isLoading, error } = useLogin();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,12 +28,17 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login submitted:", formData);
+    handleLogin({
+      email: formData.email,
+      password: formData.password,
+    });
   };
 
   const handleGoogleSignIn = () => {
     console.log("Google sign-in clicked");
   };
+
+  const errorMessage = error;
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-[#e5ebef] flex items-center justify-center py-12 px-4">
@@ -40,6 +48,12 @@ export default function LoginPage() {
         <Divider />
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errorMessage && (
+            <div className="p-3 rounded-lg bg-accent-red/10 border border-accent-red/20 text-accent-red text-sm">
+              {errorMessage}
+            </div>
+          )}
+
           <FormInput
             type="email"
             name="email"
@@ -76,9 +90,17 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full cursor-pointer bg-accent-primary hover:bg-accent-primary/90 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 cursor-pointer bg-accent-primary hover:bg-accent-primary/90 disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-colors duration-200"
           >
-            Login
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 
@@ -92,7 +114,7 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mt-4 text-sm text-gray-600">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className="text-accent-primary hover:underline font-medium">
             Register
           </Link>

@@ -15,22 +15,23 @@ const popularTags = [
   "music",
 ];
 
-export default function PopularTags() {
+export default function PopularTags({ onTagClick }) {
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3 w-full">
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <Smile className="w-5 h-5 text-gray-400" />
+        <Smile className="w-5 h-5 text-gray-400 shrink-0" />
         {popularTags.map((tag) => (
           <button
             key={tag}
             type="button"
-            className="px-4 py-1.5 bg-white border border-gray-300 rounded-full text-sm text-gray-600 hover:border-accent-primary hover:text-accent-primary transition-colors duration-200"
+            onClick={() => onTagClick?.(tag)}
+            className="px-4 py-2 bg-white/90 border border-gray-200 rounded-full text-sm text-gray-600 hover:border-accent-primary hover:text-accent-primary hover:bg-accent-primary/5 transition-all duration-200"
           >
             {tag}
           </button>
         ))}
       </div>
-      <p className="text-gray-400 text-sm">
+      <p className="text-gray-500 text-sm">
         The most searched phrases in the last 30 days.
       </p>
     </div>

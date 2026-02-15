@@ -43,6 +43,10 @@
   --color-hover-bg: #1e293b;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   color: var(--text-primary);
   font-family: outfit, sans-serif;
@@ -72,4 +76,18 @@ body {
   background: 
     radial-gradient(ellipse at 20% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+}
+
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 }

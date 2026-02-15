@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import {
   Bot,
   Megaphone,
@@ -17,6 +18,8 @@ import {
 import { topStats, topThree, rankingItems } from "@/data/rankingData";
 import AddLinkModal from "@/components/Modal/AddLinkModal";
 import Image from "next/image";
+
+const MotionLink = motion.create(Link);
 const categoryOptions = ["All Categories", "Crypto", "Finance", "Technology", "News", "Entertainment"];
 const languageOptions = ["All Languages", "English", "Russian", "Spanish", "Arabic"];
 const timeOptions = ["Last 24 hours", "Last 7 days", "Last 30 days", "All Time"];
@@ -54,7 +57,12 @@ export default function RankingPage() {
       </div>
 
       {/* Top 3 Podium */}
-      <div className="max-w-[1344px] mx-auto px-4 md:px-8 py-12">
+      <motion.div
+        className="max-w-[1344px] mx-auto px-4 md:px-8 py-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
           {/* 2nd Place */}
           <div className="order-2 md:order-1 flex flex-col items-center">
@@ -122,7 +130,7 @@ export default function RankingPage() {
             <span className="text-2xl font-bold text-text-primary mt-1">3</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Leaders Section */}
       <div className="max-w-[1344px] mx-auto px-4 md:px-8 py-8">
@@ -158,15 +166,24 @@ export default function RankingPage() {
       </div>
 
       {/* Top Stats Cards */}
-      <div className="max-w-[1344px] mx-auto px-4 md:px-8 py-8">
+      <motion.div
+        className="max-w-[1344px] mx-auto px-4 md:px-8 py-8"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {topStats.map((stat) => {
             const Icon = stat.icon === "bot" ? Bot : stat.icon === "channel" ? Megaphone : Users;
             return (
-              <Link
+              <MotionLink
                 key={stat.type}
                 href={`#${stat.type}`}
-                className="group flex items-center gap-4 p-6 bg-secondary-dark rounded-xl border border-white/6 hover:border-accent-primary/30 transition-all duration-200"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+                className="group flex items-center gap-4 p-6 bg-secondary-dark rounded-xl border border-white/6 hover:border-accent-primary/30"
               >
                 <div className="w-14 h-14 rounded-xl bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary/20 transition-colors">
                   <Icon className="w-7 h-7 text-accent-primary" />
@@ -175,7 +192,7 @@ export default function RankingPage() {
                   <p className="text-text-muted text-sm">{stat.label}</p>
                   <p className="text-2xl font-bold text-text-primary">{stat.count}</p>
                 </div>
-              </Link>
+              </MotionLink>
             );
           })}
         </div>
@@ -202,18 +219,20 @@ export default function RankingPage() {
           </select>
           <div className="flex gap-1">
             {timeOptions.map((opt) => (
-              <button
+              <motion.button
                 key={opt}
                 type="button"
                 onClick={() => setTimeFilter(opt)}
-                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                   timeFilter === opt
                     ? "bg-accent-primary text-white"
                     : "bg-secondary-dark text-text-muted hover:text-text-primary border border-white/6"
                 }`}
               >
                 {opt.replace("Last ", "").replace(" days", "d").replace(" hours", "h")}
-              </button>
+              </motion.button>
             ))}
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -242,18 +261,27 @@ export default function RankingPage() {
               className="w-full pl-12 pr-4 py-3 bg-secondary-dark border border-white/6 rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-primary"
             />
           </div>
-          <button
+          <motion.button
             type="button"
             onClick={() => setIsAddModalOpen(true)}
+            whileHover={{ opacity: 0.95 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.15 }}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-accent-primary hover:bg-accent-primary/90 text-white font-medium rounded-lg transition-colors cursor-pointer"
           >
             <Plus className="w-5 h-5" />
             Add New Channel
-          </button>
+          </motion.button>
         </div>
 
         {/* Ranking Table */}
-        <div className="bg-secondary-dark border border-white/6 rounded-xl overflow-hidden">
+        <motion.div
+          className="bg-secondary-dark border border-white/6 rounded-xl overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -334,14 +362,14 @@ export default function RankingPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </motion.div>
 
         {filteredItems.length === 0 && (
           <div className="text-center py-16 text-text-muted">
             No results found. Try adjusting your filters.
           </div>
         )}
-      </div>
+      </motion.div>
 
       <AddLinkModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
     </div>

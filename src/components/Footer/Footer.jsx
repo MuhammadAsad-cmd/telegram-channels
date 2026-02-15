@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import { FaFire, FaTrophy, FaMedal, FaTelegram } from "react-icons/fa";
 import { Send } from "lucide-react";
+
+const MotionLink = motion.create(Link);
 
 const footerData = {
   media: {
@@ -52,13 +55,16 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerData.media.links.map((link, index) => (
                 <li key={index}>
-                  <Link
+                  <MotionLink
                     href={link.href}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
                     className="text-text-muted hover:text-text-primary transition-colors text-sm flex items-center gap-2"
                   >
                     {link.icon}
                     {link.name}
-                  </Link>
+                  </MotionLink>
                 </li>
               ))}
             </ul>
@@ -70,15 +76,18 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerData.links.links.map((link, index) => (
                 <li key={index}>
-                  <Link
+                  <MotionLink
                     href={link.href}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
                     className="text-text-muted hover:text-text-primary transition-colors text-sm flex items-center gap-2"
                     target={link.href.startsWith("http") ? "_blank" : undefined}
                     rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   >
                     {link.icon}
                     {link.name}
-                  </Link>
+                  </MotionLink>
                 </li>
               ))}
             </ul>
@@ -90,12 +99,15 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerData.about.links.map((link, index) => (
                 <li key={index}>
-                  <Link
+                  <MotionLink
                     href={link.href}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
                     className="text-text-muted hover:text-text-primary transition-colors text-sm"
                   >
                     {link.name}
-                  </Link>
+                  </MotionLink>
                 </li>
               ))}
             </ul>
@@ -124,12 +136,24 @@ export default function Footer() {
             © 2018-2026 Telegram Channels. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="text-text-muted/60 hover:text-text-primary transition-colors text-sm">
+            <MotionLink
+              href="/privacy"
+              whileHover={{ x: 2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="text-text-muted/60 hover:text-text-primary transition-colors text-sm"
+            >
               Privacy
-            </Link>
-            <Link href="/terms" className="text-text-muted/60 hover:text-text-primary transition-colors text-sm">
+            </MotionLink>
+            <MotionLink
+              href="/terms"
+              whileHover={{ x: 2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="text-text-muted/60 hover:text-text-primary transition-colors text-sm"
+            >
               Terms
-            </Link>
+            </MotionLink>
           </div>
         </div>
       </div>

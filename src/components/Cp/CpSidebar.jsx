@@ -15,6 +15,7 @@ import {
   LogOut,
 } from "lucide-react";
 import LogoutModal from "../Modal/LogoutModal";
+import { useAuthContext } from "@/context/AuthContext";
 
 const navItems = [
   { href: "/cp", label: "Dashboard", icon: LayoutDashboard },
@@ -24,12 +25,13 @@ const navItems = [
   { href: "/cp/tcp-history", label: "TCP History", icon: History },
   { href: "/cp/ads", label: "Advertising", icon: BadgePercent },
   { href: "/cp/account-setting", label: "Account Setting", icon: Settings },
-  { href: "/cp/notifications", label: "Notifications", icon: Bell },
+  // { href: "/cp/notifications", label: "Notifications", icon: Bell },
 ];
 
 export default function CpSidebar() {
   const pathname = usePathname();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const { logout } = useAuthContext();
 
   return (
     <aside className="w-64 shrink-0 bg-secondary-dark border-r border-white/6 flex flex-col">
@@ -69,7 +71,7 @@ export default function CpSidebar() {
       <LogoutModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
-        onConfirm={() => {}}
+        onConfirm={logout}
       />
     </aside>
   );

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, ImagePlus, Loader2 } from "lucide-react";
 import GoogleButton from "@/components/Auth/GoogleButton";
 import FormInput from "@/components/Auth/FormInput";
 import AuthCard from "@/components/Auth/AuthCard";
 import Divider from "@/components/Auth/Divider";
+import { useRegister } from "@/hooks/useAuth";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -14,11 +15,21 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    image: null,
     agreeToPolicy: false,
   });
 
+  const { handleRegister, isLoading, error } = useRegister();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (type === "file") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: e.target.files?.[0] ?? null,
+      }));
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -28,19 +39,30 @@ export default function RegisterPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
       return;
     }
     if (!formData.agreeToPolicy) {
-      alert("Please agree to the Terms & Privacy Policy");
       return;
     }
-    console.log("Register submitted:", formData);
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("password", formData.password);
+    if (formData.image instanceof File) {
+      data.append("image", formData.image);
+    }
+
+    handleRegister(data);
   };
 
   const handleGoogleSignIn = () => {
     console.log("Google sign-in clicked");
   };
+
+  const errorMessage = error;
+  const passwordsMatch = formData.password === formData.confirmPassword || !formData.confirmPassword;
+  const agreedToPolicy = formData.agreeToPolicy;
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-[#e5ebef] flex items-center justify-center py-12 px-4">
@@ -50,6 +72,24 @@ export default function RegisterPage() {
         <Divider />
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errorMessage && (
+            <div className="p-3 rounded-lg bg-accent-red/10 border border-accent-red/20 text-accent-red text-sm">
+              {errorMessage}
+            </div>
+          )}
+
+          {formData.password && formData.confirmPassword && !passwordsMatch && (
+            <div className="p-3 rounded-lg bg-accent-red/10 border border-accent-red/20 text-accent-red text-sm">
+              Passwords do not match
+            </div>
+          )}
+
+          {!agreedToPolicy && (formData.name || formData.email) && (
+            <div className="p-3 rounded-lg bg-accent-yellow/10 border border-accent-yellow/20 text-amber-700 text-sm">
+              Please agree to the Terms & Privacy Policy
+            </div>
+          )}
+
           <FormInput
             type="text"
             name="name"
@@ -90,6 +130,25 @@ export default function RegisterPage() {
             required
           />
 
+          <div>
+            <label className="block text-gray-600 text-sm mb-2">Profile Image (optional)</label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg border-2 border-dashed border-gray-300 hover:border-accent-primary transition-colors bg-white">
+                <ImagePlus className="w-5 h-5 text-gray-400" />
+              </div>
+              <span className="text-sm text-gray-600">
+                {formData.image ? formData.image.name : "Choose image"}
+              </span>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+
           <div className="flex items-start gap-2">
             <input
               type="checkbox"
@@ -113,9 +172,21 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full cursor-pointer bg-accent-primary hover:bg-accent-primary/90 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+            disabled={
+              isLoading ||
+              !passwordsMatch ||
+              !agreedToPolicy
+            }
+            className="w-full flex items-center justify-center gap-2 cursor-pointer bg-accent-primary hover:bg-accent-primary/90 disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-colors duration-200"
           >
-            Register
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
 

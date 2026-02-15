@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import { blogPosts } from "@/data/blogPosts";
 import { FaBlog } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
+
+const MotionLink = motion.create(Link);
 
 // Telegram Icon Component
 function TelegramIcon() {
@@ -26,7 +29,13 @@ function TelegramIcon() {
 
 export default function LatestBlogPosts() {
   return (
-    <section className="py-12 bg-primary-dark">
+    <motion.section
+      className="py-12 bg-primary-dark"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="max-w-[1344px] mx-auto px-4 md:px-8">
         {/* Section Header */}
         <div className="flex items-center gap-2 mb-6">
@@ -35,33 +44,52 @@ export default function LatestBlogPosts() {
         </div>
 
         {/* Blog Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
           {blogPosts.map((post) => (
-            <Link
+            <MotionLink
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="bg-secondary-dark border border-white/6 rounded-lg p-4 flex items-center gap-4 hover:border-white/12 transition-all duration-300 group"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+              }}
+              className="bg-secondary-dark border border-white/6 rounded-lg p-4 flex items-center gap-4 hover:border-white/12 group"
             >
               <TelegramIcon />
               <h3 className="text-sm text-text-muted group-hover:text-text-primary transition-colors line-clamp-2">
                 {post.title}
               </h3>
-            </Link>
+            </MotionLink>
           ))}
-        </div>
+        </motion.div>
 
         {/* More Articles Link */}
         <div className="flex justify-end mt-6">
-          <Link
+          <MotionLink
             href="/blog"
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
             className="flex items-center gap-2 text-accent-primary hover:text-accent-primary/80 transition-colors text-sm group"
           >
             <FaBlog className="w-4 h-4" />
             <span>More Articles</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </MotionLink>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
