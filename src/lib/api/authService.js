@@ -15,3 +15,5 @@ export const newPassword = (code, password) =>
   apiPublic.post("/user/new-password", { code, password });
 
 export const logout = () => api.get("/user/logout");
+
+export const socialLogin = (data) => apiPublic.post("/user/social", data);

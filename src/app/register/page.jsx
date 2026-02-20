@@ -8,6 +8,7 @@ import FormInput from "@/components/Auth/FormInput";
 import AuthCard from "@/components/Auth/AuthCard";
 import Divider from "@/components/Auth/Divider";
 import { useRegister } from "@/hooks/useAuth";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -56,9 +57,7 @@ export default function RegisterPage() {
     handleRegister(data);
   };
 
-  const handleGoogleSignIn = () => {
-    console.log("Google sign-in clicked");
-  };
+  const handleGoogleSignIn = () => signIn("google", { callbackUrl: "/" });
 
   const errorMessage = error;
   const passwordsMatch = formData.password === formData.confirmPassword || !formData.confirmPassword;
@@ -67,7 +66,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-[#e5ebef] flex items-center justify-center py-12 px-4">
       <AuthCard>
-        <GoogleButton text="Sign up with Google" onClick={handleGoogleSignIn} />
+        <GoogleButton text="Sign in with Google" onClick={handleGoogleSignIn} />
 
         <Divider />
 

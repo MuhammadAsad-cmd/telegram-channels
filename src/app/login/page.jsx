@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import GoogleButton from "@/components/Auth/GoogleButton";
 import FormInput from "@/components/Auth/FormInput";
@@ -34,9 +35,7 @@ export default function LoginPage() {
     });
   };
 
-  const handleGoogleSignIn = () => {
-    console.log("Google sign-in clicked");
-  };
+  const handleGoogleSignIn = () => signIn("google", { callbackUrl: "/" });
 
   const errorMessage = error;
 

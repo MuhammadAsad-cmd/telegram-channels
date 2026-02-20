@@ -33,9 +33,11 @@ const createApiInstance = (withAuth = false) => {
     instance.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 401 && typeof window !== "undefined") {
+        const status = error.response?.status;
+        if ((status === 401 || status === 403) && typeof window !== "undefined") {
           clearAuthCookie();
-          window.location.href = "/login";
+          const callbackUrl = `${window.location.origin}/login`;
+          window.location.href = `/api/auth/signout?callbackUrl=${encodeURIComponent(callbackUrl)}`;
         }
         return Promise.reject(error);
       },
