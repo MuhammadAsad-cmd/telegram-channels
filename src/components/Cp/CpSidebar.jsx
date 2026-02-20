@@ -92,7 +92,7 @@ export default function CpSidebar({ isOpen, onClose }) {
         className={`
           bg-secondary-dark border-r border-white/6 flex flex-col
           md:relative md:translate-x-0 md:w-64 md:shrink-0 md:flex md:opacity-100
-          fixed top-0 left-0 h-full w-64 z-40
+          fixed top-0 left-0 h-full w-64 z-50
           transition-transform duration-300 ease-out
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
