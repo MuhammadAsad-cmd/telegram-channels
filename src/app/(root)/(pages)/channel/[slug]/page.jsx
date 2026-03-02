@@ -68,23 +68,29 @@ export default function ChannelDetailPage() {
         const data = response?.data;
         if (cancelled) return;
         if (data?.result && Array.isArray(data?.data) && data.data.length > 0) {
-          setChannel(data.data[0]);
-          const catId = data.data[0]?.category?._id;
-          const currentSlug = data.data[0]?.slug ?? data.data[0]?.username?.replace(/_/g, "-");
-          if (catId) {
-            const relResponse = await fetchChannels({
-              category: catId,
-              limit: 8,
-              sortKey: "memberCount",
-              sortBy: "desc",
-            });
-            const rel = relResponse?.data;
-            if (!cancelled && rel?.result && Array.isArray(rel?.data)) {
-              setRelatedChannels(
-                rel.data
-                  .filter((c) => (c.slug ?? c.username?.replace(/_/g, "-")) !== currentSlug)
-                  .slice(0, 8)
-              );
+          const ch = data.data[0];
+          if (ch.status !== "approved") {
+            setChannel(null);
+          } else {
+            setChannel(ch);
+            const catId = ch?.category?._id;
+            const currentSlug = ch?.slug ?? ch?.username?.replace(/_/g, "-");
+            if (catId) {
+              const relResponse = await fetchChannels({
+                category: catId,
+                limit: 8,
+                sortKey: "memberCount",
+                sortBy: "desc",
+                status: "approved",
+              });
+              const rel = relResponse?.data;
+              if (!cancelled && rel?.result && Array.isArray(rel?.data)) {
+                setRelatedChannels(
+                  rel.data
+                    .filter((c) => (c.slug ?? c.username?.replace(/_/g, "-")) !== currentSlug)
+                    .slice(0, 8)
+                );
+              }
             }
           }
         } else {

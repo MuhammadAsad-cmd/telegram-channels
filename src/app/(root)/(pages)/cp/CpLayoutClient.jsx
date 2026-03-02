@@ -8,14 +8,14 @@ export default function CpLayoutClient({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex bg-primary-dark">
+    <div className="h-[calc(100vh-4rem)] flex bg-primary-dark overflow-hidden">
       <CpSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <div className="flex-1 bg-[#e5ebef] overflow-auto min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-64 h-[calc(100vh-4rem)] overflow-hidden">
         {/* Mobile top bar with sidebar toggle */}
-        <div className="flex md:hidden items-center gap-3 px-4 py-3 bg-[#d5dde4] border-b border-black/10 sticky top-0 z-20">
+        <div className="flex shrink-0 lg:hidden items-center gap-3 px-4 py-3 bg-[#d5dde4] border-b border-black/10">
           <button
             type="button"
             onClick={() => setIsSidebarOpen(true)}
@@ -29,7 +29,9 @@ export default function CpLayoutClient({ children }) {
           </span>
         </div>
 
-        <div className="p-4 md:p-6 lg:p-8">{children}</div>
+        <div className="flex-1 min-h-0 overflow-auto bg-[#e5ebef] p-4 md:p-6 lg:p-8">
+          {children}
+        </div>
       </div>
     </div>
   );

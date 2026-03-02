@@ -12,6 +12,7 @@ export function useChannels(initialParams = {}) {
 
   const loadChannels = useCallback(async (fetchParams) => {
     const mergedParams = fetchParams ? { ...params, ...fetchParams } : { ...params };
+    if (!mergedParams.status) mergedParams.status = "approved";
     if (fetchParams) setParams(mergedParams);
     setIsLoading(true);
     setError(null);

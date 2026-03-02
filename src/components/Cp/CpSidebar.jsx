@@ -41,7 +41,7 @@ export default function CpSidebar({ isOpen, onClose }) {
   };
 
   const navContent = (
-    <nav className="p-4 space-y-1 flex-1">
+    <nav className="p-4 space-y-1 flex-1 min-h-0 overflow-y-auto">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href;
@@ -81,24 +81,24 @@ export default function CpSidebar({ isOpen, onClose }) {
     <>
       {/* Mobile: backdrop overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
       />
 
-      {/* Desktop: always visible in flow; Mobile: fixed overlay from left */}
+      {/* Fixed sidebar: below header (top-16), full height minus header */}
       <aside
         className={`
           bg-secondary-dark border-r border-white/6 flex flex-col
-          md:relative md:translate-x-0 md:w-64 md:shrink-0 md:flex md:opacity-100
-          fixed top-0 left-0 h-full w-64 z-50
+          fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 z-40
           transition-transform duration-300 ease-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          lg:translate-x-0
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Mobile close button */}
-        <div className="flex items-center justify-between p-4 border-b border-white/6 md:hidden">
+        <div className="flex shrink-0 items-center justify-between p-4 border-b border-white/6 lg:hidden">
           <span className="text-text-primary font-semibold text-sm">
             Control Panel
           </span>
