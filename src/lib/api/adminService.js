@@ -130,8 +130,11 @@ export const adminUpdateCrypto = (id, formData) =>
 export const adminRemoveCrypto = (id) => apiAdmin.delete(`/crypto/remove/${id}`);
 
 // ── Deposit Requests ─────────────────────────────────────────────────────────
-/** GET /request/fetch — returns { result, message, data: Request[] } */
-export const adminFetchRequests = () => apiAdmin.get("/request/fetch");
+/** GET /request/fetch — optional query: id (single request) — returns { result, message, data } */
+export const adminFetchRequests = (params = {}) => {
+  const query = buildQueryString(params);
+  return apiAdmin.get(`/request/fetch${query ? `?${query}` : ""}`);
+};
 
 /** PUT /request/approve/:id */
 export const adminApproveRequest = (id) => apiAdmin.put(`/request/approve/${id}`);
@@ -141,3 +144,10 @@ export const adminCancelRequest = (id) => apiAdmin.put(`/request/cancel/${id}`);
 
 /** DELETE /request/remove/:id */
 export const adminRemoveRequest = (id) => apiAdmin.delete(`/request/remove/${id}`);
+
+// ── Invoices ─────────────────────────────────────────────────────────────────
+/** GET /invoice/fetch — optional query: id (single invoice) — returns { result, message, data } */
+export const adminFetchInvoices = (params = {}) => {
+  const query = buildQueryString(params);
+  return apiAdmin.get(`/invoice/fetch${query ? `?${query}` : ""}`);
+};

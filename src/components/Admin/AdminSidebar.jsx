@@ -15,6 +15,7 @@ import {
   UserCog,
   Wallet,
   FileText,
+  Receipt,
 } from "lucide-react";
 import { useAdminAuthContext } from "@/context/AdminAuthContext";
 
@@ -53,6 +54,11 @@ const navItems = [
     href: "/admin-dashboard/requests",
     label: "Requests",
     icon: FileText,
+  },
+  {
+    href: "/admin-dashboard/invoices",
+    label: "Invoices",
+    icon: Receipt,
   },
 ];
 

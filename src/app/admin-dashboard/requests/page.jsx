@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   X,
@@ -9,6 +11,7 @@ import {
   Trash2,
   FileText,
   Image as ImageIcon,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
@@ -18,6 +21,21 @@ import {
   adminCancelRequest,
   adminRemoveRequest,
 } from "@/lib/api/adminService";
+
+function ImageModal({ src, onClose }) {
+  if (!src) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
+      <button type="button" onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer">
+        <X className="w-5 h-5" />
+      </button>
+      <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+        <Image src={src} alt="Evidence" width={800} height={600} className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg" unoptimized />
+      </div>
+    </div>
+  );
+}
 
 const STATUS_STYLES = {
   requested: "bg-accent-yellow/15 text-accent-yellow",
@@ -107,12 +125,14 @@ function CancelRequestConfirm({ request, isOpen, onClose, onConfirm, loading }) 
 }
 
 export default function AdminRequestsPage() {
+  const router = useRouter();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [approveTarget, setApproveTarget] = useState(null);
   const [cancelTarget, setCancelTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [imageModalSrc, setImageModalSrc] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [actioningId, setActioningId] = useState(null);
 
@@ -265,14 +285,26 @@ export default function AdminRequestsPage() {
               </thead>
               <tbody className="divide-y divide-white/4">
                 {filtered.map((r) => (
-                  <tr key={r._id} className="hover:bg-white/2 transition-colors">
-                    <td className="px-5 py-3.5">
+                  <tr
+                    key={r._id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => router.push(`/admin-dashboard/requests/${r._id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        router.push(`/admin-dashboard/requests/${r._id}`);
+                      }
+                    }}
+                    className="hover:bg-white/2 transition-colors cursor-pointer"
+                  >
+                    <td className="px-5 py-3.5" onClick={(e) => e.stopPropagation()}>
                       {r.evidence ? (
-                        <a
-                          href={r.evidence}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-12 h-12 rounded-lg overflow-hidden bg-white/5 border border-white/10 hover:border-accent-primary/30 transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => setImageModalSrc(r.evidence)}
+                          className="block w-12 h-12 rounded-lg overflow-hidden bg-white/5 border border-white/10 hover:border-accent-primary/30 transition-colors cursor-pointer"
+                          title="View evidence image"
                         >
                           <Image
                             src={r.evidence}
@@ -282,7 +314,7 @@ export default function AdminRequestsPage() {
                             className="w-full h-full object-cover"
                             unoptimized
                           />
-                        </a>
+                        </button>
                       ) : (
                         <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center">
                           <ImageIcon className="w-5 h-5 text-text-muted/40" />
@@ -308,25 +340,39 @@ export default function AdminRequestsPage() {
                         {formatDate(r.createdAt)}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1.5">
+                        <Link
+                          href={`/admin-dashboard/requests/${r._id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-2 rounded-lg text-text-muted hover:text-accent-primary hover:bg-accent-primary/10 transition-all cursor-pointer"
+                          title="View details"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Link>
                         {r.status === "requested" && (
                           <>
                             <button
                               type="button"
-                              onClick={() => setApproveTarget(r)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setApproveTarget(r);
+                              }}
                               disabled={!!actioningId}
                               className="p-2 rounded-lg text-text-muted hover:text-accent-secondary hover:bg-accent-secondary/10 transition-all cursor-pointer disabled:opacity-50"
-                              title="Approve"
+                              title="Approve request"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
                             <button
                               type="button"
-                              onClick={() => setCancelTarget(r)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setCancelTarget(r);
+                              }}
                               disabled={!!actioningId}
                               className="p-2 rounded-lg text-text-muted hover:text-accent-yellow hover:bg-accent-yellow/10 transition-all cursor-pointer disabled:opacity-50"
-                              title="Cancel"
+                              title="Cancel request"
                             >
                               <XCircle className="w-4 h-4" />
                             </button>
@@ -334,9 +380,12 @@ export default function AdminRequestsPage() {
                         )}
                         <button
                           type="button"
-                          onClick={() => setDeleteTarget(r)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteTarget(r);
+                          }}
                           className="p-2 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-all cursor-pointer"
-                          title="Delete"
+                          title="Delete request"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -364,6 +413,7 @@ export default function AdminRequestsPage() {
         onConfirm={handleCancelConfirm}
         loading={actioningId === cancelTarget?._id}
       />
+      <ImageModal src={imageModalSrc} onClose={() => setImageModalSrc(null)} />
       <DeleteConfirm
         request={deleteTarget}
         isOpen={!!deleteTarget}

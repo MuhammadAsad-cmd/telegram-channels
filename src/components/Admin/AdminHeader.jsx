@@ -15,6 +15,7 @@ const pageTitles = {
   "/admin-dashboard/categories": "Categories",
   "/admin-dashboard/crypto": "Payment Methods",
   "/admin-dashboard/requests": "Requests",
+  "/admin-dashboard/invoices": "Invoices",
   "/admin-dashboard/users": "Users",
 };
 
