@@ -1,27 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
 import AdminHeader from "@/components/Admin/AdminHeader";
-import { useAuthContext } from "@/context/AuthContext";
+import { useAdminAuthContext } from "@/context/AdminAuthContext";
 
 export default function AdminLayoutClient({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isAuthenticated, isLoading, user } = useAuthContext();
+  const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useAdminAuthContext();
   const router = useRouter();
+  const isLoginPage = pathname === "/admin-dashboard/login";
 
   useEffect(() => {
     if (isLoading) return;
-    if (!isAuthenticated) {
-      router.replace("/login");
+    if (isLoginPage) {
+      if (isAuthenticated) router.replace("/admin-dashboard");
       return;
     }
-    // Uncomment to restrict access by role once backend provides a role field:
-    // if (user?.role !== "admin") {
-    //   router.replace("/");
-    // }
-  }, [isLoading, isAuthenticated, user, router]);
+    if (!isAuthenticated) {
+      router.replace("/admin-dashboard/login");
+    }
+  }, [isLoading, isAuthenticated, isLoginPage, router]);
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   if (isLoading) {
     return (

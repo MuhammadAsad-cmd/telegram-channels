@@ -1,4 +1,5 @@
 import AdminLayoutClient from "./AdminLayoutClient";
+import { AdminAuthProvider } from "@/context/AdminAuthContext";
 
 export const metadata = {
   title: "Admin Dashboard - Telegram Channels",
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function AdminDashboardLayout({ children }) {
-  return <AdminLayoutClient>{children}</AdminLayoutClient>;
+  return (
+    <AdminAuthProvider>
+      <AdminLayoutClient>{children}</AdminLayoutClient>
+    </AdminAuthProvider>
+  );
 }

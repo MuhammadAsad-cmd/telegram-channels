@@ -12,15 +12,22 @@ import {
   X,
   ShieldCheck,
   ChevronRight,
+  UserCog,
+  Wallet,
+  FileText,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { useAuthContext } from "@/context/AuthContext";
+import { useAdminAuthContext } from "@/context/AdminAuthContext";
 
 const navItems = [
   {
     href: "/admin-dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    href: "/admin-dashboard/admins",
+    label: "Admins",
+    icon: UserCog,
   },
   {
     href: "/admin-dashboard/users",
@@ -37,18 +44,26 @@ const navItems = [
     label: "Categories",
     icon: Tag,
   },
-
+  {
+    href: "/admin-dashboard/crypto",
+    label: "Payment Methods",
+    icon: Wallet,
+  },
+  {
+    href: "/admin-dashboard/requests",
+    label: "Requests",
+    icon: FileText,
+  },
 ];
 
 export default function AdminSidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const { logout, user } = useAuthContext();
+  const { logout, admin } = useAdminAuthContext();
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    await logout();
-    window.location.href = "/login";
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/admin-dashboard/login";
   };
 
   const isActive = (href) => {
@@ -132,21 +147,21 @@ export default function AdminSidebar({ isOpen, onClose }) {
 
         {/* Footer: user info + logout */}
         <div className="shrink-0 px-3 py-3 border-t border-white/6">
-          {user && (
+          {admin && (
             <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
               <div className="w-7 h-7 rounded-full bg-accent-primary/20 flex items-center justify-center shrink-0">
                 <span className="text-accent-primary text-xs font-bold">
-                  {user.name?.[0]?.toUpperCase() ||
-                    user.email?.[0]?.toUpperCase() ||
+                  {admin.name?.[0]?.toUpperCase() ||
+                    admin.email?.[0]?.toUpperCase() ||
                     "A"}
                 </span>
               </div>
               <div className="min-w-0">
                 <p className="text-text-primary text-xs font-medium truncate leading-none">
-                  {user.name || "Admin"}
+                  {admin.name || "Admin"}
                 </p>
                 <p className="text-text-muted text-[11px] truncate mt-0.5 leading-none">
-                  {user.email}
+                  {admin.email}
                 </p>
               </div>
             </div>
