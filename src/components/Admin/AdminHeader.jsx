@@ -17,6 +17,8 @@ const pageTitles = {
   "/admin-dashboard/requests": "Requests",
   "/admin-dashboard/invoices": "Invoices",
   "/admin-dashboard/users": "Users",
+  "/admin-dashboard/contacts": "Contacts",
+  "/admin-dashboard/blogs": "Blogs",
 };
 
 function getPageTitle(pathname) {

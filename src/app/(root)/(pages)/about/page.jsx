@@ -71,14 +71,14 @@ export default function AboutUsPage() {
                 </a>{" "}
                 page. For legal information, see our{" "}
                 <a
-                  href="/terms"
+                  href="/terms-of-service"
                   className="text-accent-primary hover:underline"
                 >
                   Terms of Service
                 </a>{" "}
                 and{" "}
                 <a
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="text-accent-primary hover:underline"
                 >
                   Privacy Policy

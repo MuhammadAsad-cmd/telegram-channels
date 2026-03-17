@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Send, Search, Megaphone, Users, Bot, Sticker, TrendingUp, ListOrdered, Medal } from "lucide-react";
+import { Send, Search, Megaphone, Users, Bot, Sticker, TrendingUp, ListOrdered, Medal, BookOpen } from "lucide-react";
 
 const MotionLink = motion.create(Link);
 
@@ -18,15 +18,21 @@ const footerData = {
       { name: "Trending", href: "/search?sortKey=rating", icon: <TrendingUp className="w-3.5 h-3.5 text-accent-yellow" /> },
       { name: "Top 100", href: "/search?sortKey=createdAt", icon: <ListOrdered className="w-3.5 h-3.5" /> },
       { name: "Ranking", href: "/ranking", icon: <Medal className="w-3.5 h-3.5 text-accent-yellow" /> },
+      { name: "Blog", href: "/blog", icon: <BookOpen className="w-3.5 h-3.5" /> },
     ],
   },
   about: {
-    title: "About",
+    title: "Legal & Info",
     links: [
-      { name: "About Us", href: "/about" },
-      { name: "Contact Us", href: "/contact" },
-      { name: "Privacy Policy", href: "/privacy" },
-      { name: "Terms of Service", href: "/terms" },
+      { name: "About Us", href: "/about-us" },
+      { name: "Editorial Policy", href: "/editorial-policy" },
+      { name: "Privacy Policy", href: "/privacy-policy" },
+      { name: "Terms of Service", href: "/terms-of-service" },
+      { name: "DMCA Policy", href: "/dmca" },
+      { name: "Disclaimer", href: "/disclaimer" },
+      { name: "Content Removal Request", href: "/remove-listing" },
+      { name: "Acceptable Use Policy", href: "/acceptable-use" },
+      { name: "Contact", href: "/contact" },
     ],
   },
 };

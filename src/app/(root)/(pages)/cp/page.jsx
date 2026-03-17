@@ -1,8 +1,36 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Coins, Satellite, ArrowRight } from "lucide-react";
+import { Coins, Satellite } from "lucide-react";
 import CpCard from "@/components/Cp/CpCard";
+import { getProfile } from "@/lib/api/userService";
+import { fetchUserChannels } from "@/lib/api/channelService";
 
 export default function CpDashboardPage() {
+  const [balance, setBalance] = useState(0);
+  const [mediaCount, setMediaCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([getProfile(), fetchUserChannels({ limit: 9999 })])
+      .then(([profileRes, channelsRes]) => {
+        const user = profileRes?.data?.data ?? profileRes?.data;
+        const wallet = user?.wallet;
+        setBalance(
+          typeof wallet === "number"
+            ? wallet
+            : typeof wallet === "string"
+              ? parseFloat(wallet) || 0
+              : 0
+        );
+        const list = channelsRes?.data?.data ?? [];
+        setMediaCount(Array.isArray(list) ? list.length : 0);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="bg-accent-yellow/10 border border-accent-yellow/30 rounded-xl p-4 text-gray-800">
@@ -19,7 +47,9 @@ export default function CpDashboardPage() {
               <Coins className="w-6 h-6 text-amber-600" />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-gray-800">$0.00</p>
+              <p className="text-2xl font-semibold text-gray-800">
+                {loading ? "—" : `$${Number(balance).toFixed(2)}`}
+              </p>
               <p className="text-sm text-gray-500">Balance</p>
             </div>
             <Link
@@ -37,7 +67,9 @@ export default function CpDashboardPage() {
               <Satellite className="w-6 h-6 text-accent-primary" />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-gray-800">0</p>
+              <p className="text-2xl font-semibold text-gray-800">
+                {loading ? "—" : mediaCount}
+              </p>
               <p className="text-sm text-gray-500">Media</p>
             </div>
             <Link

@@ -69,7 +69,7 @@ export default function AdminSearchableSelect({
   const dropdownContent = isOpen && (
     <div
       ref={dropdownRef}
-      className="fixed z-9999 bg-secondary-dark border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+      className="fixed z-9999 bg-secondary-dark border border-white/10 rounded-xl shadow-2xl text-black overflow-hidden"
       style={{
         top: position.top,
         left: position.left,
@@ -79,14 +79,14 @@ export default function AdminSearchableSelect({
     >
       <div className="p-2 border-b border-white/6 shrink-0">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
           <input
             ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm placeholder:text-text-muted/50 focus:outline-none focus:border-accent-primary/50"
+            className="w-full bg-white border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/30"
           />
         </div>
       </div>

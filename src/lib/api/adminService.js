@@ -151,3 +151,34 @@ export const adminFetchInvoices = (params = {}) => {
   const query = buildQueryString(params);
   return apiAdmin.get(`/invoice/fetch${query ? `?${query}` : ""}`);
 };
+
+// ── Contacts ─────────────────────────────────────────────────────────────────
+/** GET /contact/fetch — optional ?id=xxx for single contact — returns { result, message, data } */
+export const adminFetchContacts = (params = {}) => {
+  const query = buildQueryString(params);
+  return apiAdmin.get(`/contact/fetch${query ? `?${query}` : ""}`);
+};
+
+/** PUT /contact/update/:id — body: { subject?, ... } */
+export const adminUpdateContact = (id, payload) =>
+  apiAdmin.put(`/contact/update/${id}`, payload);
+
+/** DELETE /contact/remove/:id */
+export const adminRemoveContact = (id) => apiAdmin.delete(`/contact/remove/${id}`);
+
+// ── Blogs ────────────────────────────────────────────────────────────────────
+/** GET /blog/fetch — optional ?slug=xxx for single blog — returns { result, message, data } */
+export const adminFetchBlogs = (params = {}) => {
+  const query = buildQueryString(params);
+  return apiAdmin.get(`/blog/fetch${query ? `?${query}` : ""}`);
+};
+
+/** POST /blog/create — form-data: title, content, image (file) */
+export const adminCreateBlog = (formData) => apiAdmin.post("/blog/create", formData);
+
+/** PUT /blog/update/:id — form-data: title?, content?, image? (file, optional) */
+export const adminUpdateBlog = (id, formData) =>
+  apiAdmin.put(`/blog/update/${id}`, formData);
+
+/** DELETE /blog/remove/:id */
+export const adminRemoveBlog = (id) => apiAdmin.delete(`/blog/remove/${id}`);

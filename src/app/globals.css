@@ -81,6 +81,35 @@ body {
 }
 
 
+/* React Quill dark theme overrides for admin */
+.rich-text-editor .ql-toolbar.ql-snow {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 8px 8px 0 0;
+}
+.rich-text-editor .ql-container.ql-snow {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 0 0 8px 8px;
+  min-height: 250px;
+}
+.rich-text-editor .ql-editor {
+  min-height: 250px;
+  color: #f8fafc;
+}
+.rich-text-editor .ql-editor.ql-blank::before {
+  color: rgba(148, 163, 184, 0.6);
+}
+.rich-text-editor .ql-snow .ql-stroke {
+  stroke: rgba(255, 255, 255, 0.15);
+}
+.rich-text-editor .ql-snow .ql-fill {
+  fill: rgba(148, 163, 184, 0.6);
+}
+.rich-text-editor .ql-snow .ql-picker {
+  color: rgba(148, 163, 184, 0.8);
+}
+
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
