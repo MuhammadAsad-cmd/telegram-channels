@@ -18,6 +18,7 @@ import {
   Receipt,
   Mail,
   BookOpen,
+  Package as PackageIcon,
 } from "lucide-react";
 import { useAdminAuthContext } from "@/context/AdminAuthContext";
 
@@ -71,6 +72,11 @@ const navItems = [
     href: "/admin-dashboard/blogs",
     label: "Blogs",
     icon: BookOpen,
+  },
+  {
+    href: "/admin-dashboard/packages",
+    label: "Packages",
+    icon: PackageIcon,
   },
 ];
 

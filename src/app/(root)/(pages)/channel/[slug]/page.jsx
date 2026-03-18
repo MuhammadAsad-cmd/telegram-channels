@@ -10,13 +10,12 @@ import {
   Globe,
   Trophy,
   Clock,
-  Bookmark,
-  MessageCircle,
 } from "lucide-react";
 import Breadcrumb from "@/components/Search/Breadcrumb";
 import { fetchChannelBySlug, fetchChannels } from "@/lib/api/channelService";
 import { ChannelDetailsSkeleton } from "@/components/UI/Skeleton";
 import Image from "next/image";
+import FeaturedChannels from "@/components/FeaturedChannels/FeaturedChannels";
 
 function formatMemberCount(count) {
   if (count == null || count === 0) return "0";
@@ -127,9 +126,19 @@ export default function ChannelDetailPage() {
 
   const breadcrumbItems = [
     { label: "Telegram Channels", href: "/" },
-    { label: channel.type ? channel.type.charAt(0).toUpperCase() + channel.type.slice(1) + "s" : "Channels", href: "/search?type=" + (channel.type || "channel") },
+    {
+      label: channel.type
+        ? `${channel.type.charAt(0).toUpperCase() + channel.type.slice(1)}s`
+        : "Channels",
+      href: `/search?type=${channel.type || "channel"}`,
+    },
     ...(channel.category
-      ? [{ label: channel.category.title, href: `/search?category=${channel.category._id}` }]
+      ? [
+          {
+            label: channel.category.title,
+            href: `/search?category=${channel.category._id}`,
+          },
+        ]
       : []),
     { label: channel.title },
   ];
@@ -333,6 +342,18 @@ export default function ChannelDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Full-width featured section (match Home cards styling) */}
+      <FeaturedChannels
+        filter="channels"
+        sectionVariant="dark"
+        cardVariant="light"
+        withSectionBackground={false}
+        showFeaturedBadge
+        title="Featured Channels"
+        subtitle="Recommended Telegram channels for you"
+        limit={8}
+      />
     </div>
   );
 }

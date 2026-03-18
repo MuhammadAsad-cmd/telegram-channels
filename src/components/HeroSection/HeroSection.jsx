@@ -49,7 +49,9 @@ export default function HeroSection() {
             variants={itemVariants}
             className="text-text-muted text-lg md:text-xl mb-12 max-w-2xl"
           >
-            More than <span className="font-semibold text-text-primary">11,550</span> Channels, Groups, Bots, and Stickers in English
+            More than{" "}
+            <span className="font-semibold text-text-primary">11,550</span>{" "}
+            Channels, Groups, Bots, and Stickers in English
           </motion.p>
 
           {/* Search Bar */}
@@ -57,20 +59,6 @@ export default function HeroSection() {
             <SearchBar />
           </motion.div>
 
-          {/* Quick Stats - subtle and minimal */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center gap-6 mt-8 text-sm text-text-muted"
-          >
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-accent-secondary rounded-full animate-pulse" />
-              <span>264 Online</span>
-            </span>
-            <span className="hidden sm:inline text-white/20">|</span>
-            <span className="hidden sm:inline">7,331 Channels</span>
-            <span className="hidden sm:inline text-white/20">|</span>
-            <span className="hidden sm:inline">1,383 Groups</span>
-          </motion.div>
         </motion.div>
       </div>
     </section>

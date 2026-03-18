@@ -1,4 +1,4 @@
-import { apiPublic, api } from "./axios";
+import { api, apiPublic } from "./axios";
 
 function buildQueryString(params) {
   const searchParams = new URLSearchParams();
@@ -30,4 +30,14 @@ export const fetchChannelInfo = (link) => {
 
 export const createChannel = (payload) => {
   return api.post("/channel/create", payload);
+};
+
+/**
+ * GET /channel/featured
+ * Query params: { filter } where filter values include:
+ * "all" | "channels" | "categories" | "home" | "highlight" (per your UI screenshot).
+ */
+export const fetchFeaturedChannels = (params = {}) => {
+  const query = buildQueryString(params);
+  return apiPublic.get(`/channel/featured${query ? `?${query}` : ""}`);
 };

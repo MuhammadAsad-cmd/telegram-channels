@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useEffect, useMemo, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -10,6 +10,7 @@ import SearchInput from "@/components/Search/SearchInput";
 import PopularTags from "@/components/Search/PopularTags";
 import TelegramIcon from "@/components/Search/TelegramIcon";
 import ChannelCard from "@/components/FeaturedChannels/ChannelCard";
+import FeaturedChannels from "@/components/FeaturedChannels/FeaturedChannels";
 import { useChannels } from "@/hooks/useChannels";
 import { useCategories } from "@/hooks/useCategories";
 import { Skeleton } from "@/components/UI/Skeleton";
@@ -43,15 +44,23 @@ function SearchContent() {
   const sortBy = searchParams.get("sortBy") ?? "desc";
 
   const { categories } = useCategories();
-  const filters = {
-    category: category || undefined,
-    type: type || undefined,
-    search: search || undefined,
-    page,
-    limit: 20,
-    sortKey,
-    sortBy,
-  };
+
+  // When category is selected, API expects filter value `"categories"`.
+  // When no category is selected, use `"all"`.
+  const featuredFilter = category ? "categories" : "all";
+
+  const filters = useMemo(
+    () => ({
+      category: category || undefined,
+      type: type || undefined,
+      search: search || undefined,
+      page,
+      limit: 20,
+      sortKey,
+      sortBy,
+    }),
+    [category, type, search, page, sortKey, sortBy],
+  );
 
   const { channels, pagination, isLoading, error, updateFilters } = useChannels(filters);
   const isInitialMount = useRef(true);
@@ -191,9 +200,35 @@ function SearchContent() {
         </div>
       )}
 
+      {/* Featured channels */}
+      <div className="pt-6 px-4 md:px-8">
+        <FeaturedChannels
+          filter={featuredFilter}
+          sectionVariant="dark"
+          withSectionBackground={false}
+          cardVariant="light"
+          showFeaturedBadge
+          className="mb-8"
+          title={featuredFilter === "categories" ? "Featured on Categories" : "Featured Channels"}
+          subtitle={
+            featuredFilter === "categories"
+              ? "Top featured channels for your selected category"
+              : "Discover the most popular Telegram channels"
+          }
+          limit={8}
+          contentPaddingClassName=""
+        />
+      </div>
+
       {/* Results */}
-      <div className="py-8 px-4 md:py-10">
+      <div className="pb-8 px-4 md:px-8">
         <div className="max-w-[1344px] mx-auto">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800">Channels</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              {isLoading ? "Loading..." : `${channels.length} results`}
+            </p>
+          </div>
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (

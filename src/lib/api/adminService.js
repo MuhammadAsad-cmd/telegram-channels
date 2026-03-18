@@ -182,3 +182,17 @@ export const adminUpdateBlog = (id, formData) =>
 
 /** DELETE /blog/remove/:id */
 export const adminRemoveBlog = (id) => apiAdmin.delete(`/blog/remove/${id}`);
+
+// ── Promotion Packages ─────────────────────────────────────────────────────
+/** GET /package/fetch — returns { result, message, data: Package[] } */
+export const adminFetchPackages = () => apiAdmin.get("/package/fetch");
+
+/** POST /package/create — body: { ...fields } */
+export const adminCreatePackage = (payload) => apiAdmin.post("/package/create", payload);
+
+/** PUT /package/update/:id — body: { ...fields } */
+export const adminUpdatePackage = (id, payload) =>
+  apiAdmin.put(`/package/update/${id}`, payload);
+
+/** DELETE /package/remove/:id */
+export const adminRemovePackage = (id) => apiAdmin.delete(`/package/remove/${id}`);
